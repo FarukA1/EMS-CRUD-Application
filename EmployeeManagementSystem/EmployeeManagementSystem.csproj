@@ -8,4 +8,46 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
+  <ItemGroup>
+    <None Remove="Data\" />
+    <None Remove="Data\Model\" />
+    <None Remove="Service\" />
+    <None Remove="Microsoft.EntityFrameworkCore" />
+    <None Remove="Microsoft.EntityFrameworkCore.SqlServer" />
+    <None Remove="Microsoft.EntityFrameworkCore.Design" />
+    <None Remove="Microsoft.EntityFrameworkCore.Tools" />
+    <None Remove="Blazorise" />
+    <None Remove="Blazorise.Bootstrap" />
+    <None Remove="Blazorise.Icons.FontAwesome" />
+    <None Remove="Blazorise.Snackbar" />
+    <None Remove="Pages\Employees\" />
+    <None Remove="Pages\Homes\" />
+    <None Remove="Pages\Employees\View\" />
+    <None Remove="Pages\Homes\View\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Data\Model\" />
+    <Folder Include="Services\" />
+    <Folder Include="Pages\Employees\" />
+    <Folder Include="Pages\Homes\" />
+    <Folder Include="Pages\Employees\View\" />
+    <Folder Include="Pages\Homes\View\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Blazorise" Version="1.1.4.1" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="1.1.4.1" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.1.4.1" />
+    <PackageReference Include="Blazorise.Snackbar" Version="1.1.4.1" />
+  </ItemGroup>
 </Project>

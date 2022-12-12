@@ -1,0 +1,206 @@
+﻿@page "/Homes/View/{Id:int}"
+@page "/Homes/View/{Id:int}/Details"
+@using EmployeeManagementSystem.Data.Model;
+@using EmployeeManagementSystem.Data;
+@using EmployeeManagementSystem.Services;
+@inject HomeService HomeService
+@inject NavigationManager NavigationManager
+
+<div class="page-item">
+    @if (home == null)
+    {<p>Loading...</p>}
+    else
+    {
+        <p><a class="link-secondary" href="/Homes">Homes</a> > <a class="link-primary" href="/Employees/View/@Id/Details">@home.Name</a></p>
+    }
+</div>
+
+<div class="page-title tabbed">
+    @if (home == null)
+    {
+        <h3>Loading...</h3>
+    }
+    else
+    {
+        <h3>@home.Name</h3>
+    }
+
+    <nav class="nav">
+        <a class="nav-link active" href="/Homes/View/@Id/Details">Details</a>
+        <a class="nav-link" href="/Homes/View/@Id/Residents">Residents</a>
+    </nav>
+</div>
+
+<div class="container-fluid p-4">
+    @if (@home == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md" id="left-column">
+
+                <div class="card mb-4">
+                    <h5 class="card-header">Home Details</h5>
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md">
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Name</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@home.Name @onchange='(eventArgs => { home.Name = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Email</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@home.Email @onchange='(eventArgs => { home.Email = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Phone</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@home.Phone @onchange='(eventArgs => { home.Phone = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">House Name</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@home.HouseName @onchange='(eventArgs => { home.HouseName = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Address</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@home.Address @onchange='(eventArgs => { home.Address = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Post Code</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@home.PostCode @onchange='(eventArgs => { home.PostCode = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">County</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@home.County @onchange='(eventArgs => { home.County = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">City</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@home.City @onchange='(eventArgs => { home.City = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md text-right">
+                    <button class="btn btn-sm btn-danger" @onclick="@(eventArgs => { ShowModal(); })"><i class="far fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <Modal @ref="modalRef">
+            @*<ModalBackdrop />*@
+
+            <ModalContent IsCentered="true">
+                <ModalHeader>
+                    <ModalTitle>Delete</ModalTitle>
+                    <CloseButton Clicked="@HideModal" />
+                </ModalHeader>
+                <ModalBody>
+                    <FieldLabel> <strong> Are you sure you want to delete @home.Name details ?</strong></FieldLabel>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Warning!</strong> This Home cannot be recovered after delete.
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+                    <Button Color="Color.Danger" @onclick="() => DeleteHome(home)">Delete</Button>
+                </ModalFooter>
+
+            </ModalContent>
+        </Modal>
+    }
+</div>
+<Snackbar @ref="snackbar">
+    <SnackbarBody>
+        @snackbarText
+    </SnackbarBody>
+</Snackbar>
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private Modal modalRef;
+
+    private void ShowModal()
+    {
+        // meetingPoint = meetingPoint;
+        modalRef.Show();
+    }
+
+    private void HideModal()
+    {
+        modalRef.Hide();
+    }
+
+    string snackbarText = "";
+    Snackbar snackbar;
+
+    public Home home = new Home();
+
+    protected override async Task OnInitializedAsync()
+    {
+        home = await HomeService.GetHomeDetailsAsync(Id);
+    }
+
+    private async Task DeleteHome(Home home)
+    {
+        home = await HomeService.DeleteHome(Id);
+        //await MeetingPointsService.UpdateDatabaseAsync();
+        NavigationManager.NavigateTo("/Homes");
+    }
+
+    private async Task UpdateValueAsync()
+    {
+        await HomeService.UpdateDatabaseAsync();
+        snackbarText = $"{home.Name}'s details have been updated. ";
+        snackbar.Show();
+    }
+}
+

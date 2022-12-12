@@ -1,13 +1,30 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using EmployeeManagementSystem.Data;
+using Microsoft.EntityFrameworkCore;
+using EmployeeManagementSystem.Services;
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+options.UseSqlServer(connectionString));
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services
+    .AddBlazorise(options =>
+    {
+        options.Immediate = true;
+    })
+    .AddBootstrapProviders()
+    .AddFontAwesomeIcons();
+builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<HomeService>();
+builder.Services.AddScoped<ResidentService>();
 
 var app = builder.Build();
 

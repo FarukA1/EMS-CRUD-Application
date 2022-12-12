@@ -1,0 +1,202 @@
+﻿@page "/Employees/Add"
+@using EmployeeManagementSystem.Data;
+@using EmployeeManagementSystem.Data.Model;
+@using EmployeeManagementSystem.Services;
+@inject EmployeeService EmployeeService
+@inject NavigationManager NavigationManager
+
+<div class="page-item">
+    <p><a class="link-secondary" href="/Employees">Employees</a> > <a class="link-primary" href="/Employees/Add">Add Employee</a></p>
+</div>
+
+<div class="page-title">
+    <h3>Add an Employee</h3>
+</div>
+
+<div class="container-fluid p-4">
+
+    <EditForm Model="@newEmployee" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <Microsoft.AspNetCore.Components.Forms.ValidationSummary />
+        <div class="card mb-4">
+            <h5 class="card-header">Employee details</h5>
+            <div class="card-body">
+
+                <div class="form-row">
+                    <div class="col-sm-5 col-md-6">
+
+                        <div>
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="FirstName">First Name</label>
+                                    <InputText @bind-Value="newEmployee.FirstName" type="text" class="form-control form-control-sm" id="FirstName" placeholder="E.g. James" />
+                                    <ValidationMessage For="(() => newEmployee.FirstName)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="MiddleName">Middle Name</label>
+                                    <InputText @bind-Value="newEmployee.MiddleName" type="text" class="form-control form-control-sm" id="MiddleName" placeholder="E.g. Ola" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="LastName">Last Name</label>
+                                    <InputText @bind-Value="newEmployee.LastName" type="text" class="form-control form-control-sm" id="LastName" placeholder="E.g. Smith" />
+                                    <ValidationMessage For="(() => newEmployee.LastName)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="Age">Age</label>
+                                    <InputNumber @bind-Value="newEmployee.Age" type="text" class="form-control form-control-sm" id="Age" placeholder="E.g. 23" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <label for="Gender">Gender</label>
+                                <InputSelect @bind-Value="newEmployee.Gender" class="form-control form-control-sm" id="Gender" required>
+                                    <option value="@(Gender.Male)">Male</option>
+                                    <option value="@(Gender.Female)">Female</option>
+                                    <option value="@(Gender.Other)">Other</option>
+                                    <option value="">Prefer not to say</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="Email">Email</label>
+                                    <InputText @bind-Value="newEmployee.Email" type="text" class="form-control form-control-sm" id="Email" placeholder="E.g. gfdhfj@gmail.com" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="Phone">Phone</label>
+                                    <InputText @bind-Value="newEmployee.Phone" type="text" class="form-control form-control-sm" id="Phone" placeholder="E.g. 0776467897897" />
+                                    <ValidationMessage For="(() => newEmployee.Phone)" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-5 col-md-6">
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="Phone">House Number</label>
+                                    <InputText @bind-Value="newEmployee.HouseName" type="tel" class="form-control form-control-sm" id="HouseName" placeholder="E.g. 71" />
+                                    <ValidationMessage For="(() => newEmployee.HouseName)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="EmailAddress">Address</label>
+                                    <InputText @bind-Value="newEmployee.Address" type="text" class="form-control form-control-sm" id="Address" placeholder="E.g. 10 Downing Street" />
+                                    <ValidationMessage For="(() => newEmployee.Address)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="PostCode">Post Code</label>
+                                    <InputText @bind-Value="newEmployee.PostCode" type="text" class="form-control form-control-sm" id="PostCode" />
+                                    <ValidationMessage For="(() => newEmployee.PostCode)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="County">County</label>
+                                    <InputText @bind-Value="newEmployee.County" type="text" class="form-control form-control-sm" id="County" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="City">City</label>
+                                    <InputText @bind-Value="newEmployee.City" type="text" class="form-control form-control-sm" id="City" />
+                                    <ValidationMessage For="(() => newEmployee.City)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="Nationality">Nationality</label>
+                                    <InputText @bind-Value="newEmployee.Nationality" type="text" class="form-control form-control-sm" id="Nationality" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+
+                <div class="form-row">
+                    <div class="col-sm-5 col-md-6">
+
+                        <div>
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="HireDate">Hire Date</label>
+                                    <InputDate @bind-Value="newEmployee.HireDate" class="form-control form-control-sm" id="HireDate" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="LastName">Termination Date</label>
+                                    <InputDate @bind-Value="newEmployee.TerminationDate" class="form-control form-control-sm" id="TerminationDate" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="EmploymentStatus">Employment Status</label>
+                                    <InputTextArea @bind-Value="newEmployee.EmploymentStatus" type="text" class="form-control form-control-sm" id="EmploymentStatus" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="add-btn float-right purple mt-2 mb-5">Save Employee</button>
+    </EditForm>
+</div>
+
+@code {
+
+    private Employee newEmployee = new Employee();
+    DateTime dateTime = DateTime.Now;
+
+    private async Task HandleValidSubmit()
+    {
+        newEmployee.CreateDate = dateTime;
+        var addEmployee = await EmployeeService.AddEmployee(newEmployee);
+        NavigationManager.NavigateTo("/Employees");
+    }
+}
+

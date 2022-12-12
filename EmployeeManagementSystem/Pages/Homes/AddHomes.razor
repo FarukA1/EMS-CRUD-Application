@@ -1,0 +1,119 @@
+﻿@page "/Homes/Add"
+@using EmployeeManagementSystem.Data;
+@using EmployeeManagementSystem.Data.Model;
+@using EmployeeManagementSystem.Services;
+@inject HomeService HomeService
+@inject NavigationManager NavigationManager
+
+<div class="page-item">
+    <p><a class="link-secondary" href="/Homes">Homes</a> > <a class="link-primary" href="/Homes/Add">Add Home</a></p>
+</div>
+
+<div class="page-title">
+    <h3>Add a Home</h3>
+</div>
+
+<div class="container-fluid p-4">
+
+    <EditForm Model="@newHome" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <Microsoft.AspNetCore.Components.Forms.ValidationSummary />
+        <div class="card mb-4">
+            <h5 class="card-header">Employee details</h5>
+            <div class="card-body">
+
+                <div class="form-row">
+                    <div class="col-sm-5 col-md-6">
+
+                        <div>
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="Name">Name</label>
+                                    <InputText @bind-Value="newHome.Name" type="text" class="form-control form-control-sm" id="Name" placeholder="E.g. Grace Nursing Home" />
+                                    <ValidationMessage For="(() => newHome.Name)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="Email">Email</label>
+                                    <InputText @bind-Value="newHome.Email" type="text" class="form-control form-control-sm" id="Email" placeholder="E.g. Ola@gmail.com" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="Phone">Phone</label>
+                                    <InputText @bind-Value="newHome.Phone" type="text" class="form-control form-control-sm" id="Phone" placeholder="E.g. 098765454" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="HouseName">House Name</label>
+                                    <InputText @bind-Value="newHome.HouseName" type="text" class="form-control form-control-sm" id="HouseName" placeholder="E.g. 23" />
+                                    <ValidationMessage For="(() => newHome.HouseName)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="Address">Address</label>
+                                    <InputText @bind-Value="newHome.Address" type="text" class="form-control form-control-sm" id="Address" placeholder="E.g. 32 Hope Street" />
+                                    <ValidationMessage For="(() => newHome.Address)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="PostCode">Post Code</label>
+                                    <InputText @bind-Value="newHome.PostCode" type="text" class="form-control form-control-sm" id="PostCode" placeholder="E.g. BR3 XX3" />
+                                    <ValidationMessage For="(() => newHome.PostCode)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="County">County</label>
+                                    <InputText @bind-Value="newHome.County" type="text" class="form-control form-control-sm" id="County" placeholder="E.g. Merseyside" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label for="City">City</label>
+                                    <InputText @bind-Value="newHome.City" type="text" class="form-control form-control-sm" id="City" placeholder="E.g. Liverpool" />
+                                    <ValidationMessage For="(() => newHome.City)" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="add-btn float-right purple mt-2 mb-5">Save Home</button>
+    </EditForm>
+</div>
+
+
+@code {
+
+    private Home newHome = new Home();
+    //DateTime dateTime = DateTime.Now;
+
+    private async Task HandleValidSubmit()
+    {
+        //newEmployee.CreateDate = dateTime;
+        var addHome = await HomeService.AddHome(newHome);
+        NavigationManager.NavigateTo("/Homes");
+    }
+}
+

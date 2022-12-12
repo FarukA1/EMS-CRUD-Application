@@ -1,0 +1,333 @@
+﻿@page "/Homes/View/{Id:int}/Residents"
+@using EmployeeManagementSystem.Data.Model;
+@using EmployeeManagementSystem.Data;
+@using EmployeeManagementSystem.Services;
+@inject HomeService HomeService
+@inject ResidentService ResidentService
+@inject NavigationManager NavigationManager
+
+<div class="page-item">
+    <p> </p>
+    @if (home == null)
+    {<p>Loading...</p>}
+    else
+    {
+        <p>
+            <a class="link-secondary" href="/Homes">Homes</a> > <a class="link-secondary" href="/Homes/View/@Id/Details">@home.Name</a>
+            > <a class="link-primary" href="/Homes/View/@Id/Residents">Residents</a>
+        </p>
+    }
+</div>
+
+<div class="page-title">
+    @if (home == null)
+    {
+        <h3>Loading...</h3>
+    }
+    else
+    {
+        <h3>Residents</h3>
+    }
+    <nav class="nav">
+        <a class="nav-link active" href="/Homes/View/@Id/Details">Details</a>
+        <a class="nav-link" href="/Homes/View/@Id/Residents">Residents</a>
+    </nav>
+</div>
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button @onclick="@(eventArgs => { ShowModal(-1); })" class="btn btn-secondary me-md-2" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+            type="button">
+        Add Resident
+    </button>
+</div>
+
+<div class="container-fluid p-4 position-relative">
+    @if (home == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        // Add Resident
+
+        <Modal @ref="modalRef">
+            @*<ModalBackdrop />*@
+
+            <ModalContent IsCentered="true">
+                <ModalHeader>
+                    <ModalTitle>Add a Resident</ModalTitle>
+                    <CloseButton Clicked="@HideModal" />
+                </ModalHeader>
+                <EditForm Model="@addResident" OnValidSubmit="AddResident">
+                    <ModalBody>
+                        <div class="form-row">
+                            <div class="col-4">
+                                <p class="details-label">First Name</p>
+                            </div>
+                            <div class="col-8">
+                                <InputText class="form-control" @bind-Value="addResident.FirstName" />
+                                <ValidationMessage For="(() => addResident.FirstName)" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-4">
+                                <p class="details-label">Middle Name</p>
+                            </div>
+                            <div class="col-8">
+                                <InputText class="form-control" @bind-Value="addResident.MiddleName" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-4">
+                                <p class="details-label">Last Name</p>
+                            </div>
+                            <div class="col-8">
+                                <InputText class="form-control" @bind-Value="addResident.LastName" />
+                                <ValidationMessage For="(() => addResident.LastName)" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-4">
+                                <p class="details-label">Age</p>
+                            </div>
+                            <div class="col-8">
+                                <InputNumber class="form-control" @bind-Value="addResident.Age" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-4">
+                                <p class="details-label">Gender</p>
+                            </div>
+                            <div class="col-8">
+                                <InputSelect class="form-control" @bind-Value="addResident.Gender">
+                                    <option value="@(Gender.Male)">Male</option>
+                                    <option value="@(Gender.Female)">Female</option>
+                                    <option value="@(Gender.Other)">Other</option>
+                                    <option value="">Prefer not to say</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-4">
+                                <p class="details-label">Condition</p>
+                            </div>
+                            <div class="col-8">
+                                <InputText class="form-control" @bind-Value="addResident.Condition" />
+                            </div>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+                        <Button Color="Color.Primary" type="@ButtonType.Submit">Save</Button>
+                    </ModalFooter>
+                </EditForm>
+            </ModalContent>
+        </Modal>
+
+
+        // Edit RESIDENT
+
+
+
+        @if (home.Residents == null)
+        {
+            <p>No resident has been added yet...</p>
+        }
+        else
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Second Name</th>
+                        <th scope="col">Gender</th>
+                    </tr>
+                </thead>
+                @foreach (var home in home.Residents)
+                {
+                    <tbody>
+                        <tr @onclick="(() =>ShowEditModal(home))">
+                            <td>@home.FirstName</td>
+                            <td>@home.LastName</td>
+                            <td>@home.Gender</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                }
+            </table>
+
+            @foreach (var home in home.Residents)
+            {
+                <Modal @ref="modalRefEdit">
+                    @*<ModalBackdrop />*@
+                    <ModalContent IsCentered="true">
+                        <ModalHeader>
+                            <ModalTitle>
+                                @home.FirstName
+                            </ModalTitle>
+                            <CloseButton Clicked="@HideEditModal" />
+                        </ModalHeader>
+                        <ModalBody>
+
+                            <div class="form-row">
+                                <div class="col-4">
+                                    <p class="details-label">First Name</p>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" class="form-control hover-hide" value=@home.FirstName @onchange='(eventArgs => { home.FirstName = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-4">
+                                    <p class="details-label">Middle Name</p>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" class="form-control hover-hide" value=@home.MiddleName @onchange='(eventArgs => { home.MiddleName = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-4">
+                                    <p class="details-label">Last Name</p>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" class="form-control hover-hide" value=@home.LastName @onchange='(eventArgs => { home.LastName = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-4">
+                                    <p class="details-label">Age</p>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" class="form-control hover-hide" value=@home.Age @onchange='(eventArgs => { home.Age = Int32.Parse(eventArgs.Value.ToString()); UpdateValueAsync(); })' autocomplete="nope" />
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-4">
+                                    <p class="details-label">Gender</p>
+                                </div>
+                                <div class="col-8">
+                                    <select id="@home.HomeID" value=@home.Gender @onchange='(eventArgs => { home.Gender = (Gender)Enum.Parse(typeof(Gender), eventArgs.Value.ToString()); UpdateValueAsync(); })' class="form-control hover-hide">
+                                        <option id="@home.HomeID" value="@(Gender.Male)">Male</option>
+                                        <option id="@home.HomeID" value="@(Gender.Female)">Female</option>
+                                        <option id="@home.HomeID" value="@(Gender.Other)">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-4">
+                                    <p class="details-label">Condition</p>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" class="form-control hover-hide" value=@home.Condition @onchange='(eventArgs => { home.Condition = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                </div>
+                            </div>
+
+                        </ModalBody>
+                    </ModalContent>
+                </Modal>
+            }
+        }
+
+        <Snackbar @ref="snackbar">
+            <SnackbarBody>
+                @snackbarText
+            </SnackbarBody>
+        </Snackbar>
+
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private Modal modalRef;
+    private Modal modalRefEdit;
+
+
+    string snackbarText = "";
+    Snackbar snackbar;
+
+    public Home home = new Home();
+    public Resident addResident = new Resident();
+
+    public Home currentResident = new Home();
+
+    private Resident selectedResident;
+
+    protected override async Task OnInitializedAsync()
+    {
+        home = await HomeService.GetHomeDetailsAsync(Id);
+        addResident.ResidentID = -1;
+    }
+
+    private async Task AddResident()
+    {
+        if (addResident.ResidentID == -1)
+        {
+            //addFamilyVisit.DevaStaffMemberID = Int32.Parse(selectedDevaStaffMember); //check
+            addResident.HomeID = home.HomeID;
+            addResident.ResidentID = 0;
+            await ResidentService.AddResident(addResident);
+            addResident = new Resident();
+        }
+        else
+        {
+            await ResidentService.UpdateResident(addResident.ResidentID, addResident.FirstName, addResident.MiddleName, addResident.LastName,
+                addResident.Age, addResident.Gender, addResident.Condition);
+        }
+        snackbarText = $"Resident have been updated";
+        HideModal();
+        snackbar.Show();
+        await OnInitializedAsync();
+
+    }
+
+    private async Task DeleteResident(Resident resident)
+    {
+        home.Residents.Remove(resident);
+        await HomeService.UpdateDatabaseAsync();
+        snackbarText = $"Delete Successful.";
+        snackbar.Show();
+    }
+
+    private async Task UpdateValueAsync()
+    {
+        await HomeService.UpdateDatabaseAsync();
+        snackbarText = $"Resident's details have been updated.";
+        snackbar.Show();
+    }
+
+    private void ShowModal(int currentID)
+    {
+        if (currentID != -1)
+        {
+            var currenHome = home.Residents.Where(x => x.ResidentID == currentID).FirstOrDefault();
+            addResident = currenHome;
+        }
+        modalRef.Show();
+    }
+
+    private void HideModal()
+    {
+        modalRef.Hide();
+    }
+
+
+    private void ShowEditModal(Resident resident)
+    {
+        modalRefEdit.Show();
+    }
+
+    private void HideEditModal()
+    {
+        modalRefEdit.Hide();
+    }
+}
+

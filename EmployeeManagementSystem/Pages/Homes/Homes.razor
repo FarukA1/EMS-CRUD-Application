@@ -1,0 +1,73 @@
+﻿@page "/Homes"
+@using EmployeeManagementSystem.Data.Model;
+@using EmployeeManagementSystem.Data;
+@using EmployeeManagementSystem.Services;
+@inject HomeService HomeService
+@inject NavigationManager NavigationManager
+
+<div class="page-item">
+    <p><a class="link-primary" href="/Homes">Homes</a></p>
+</div>
+
+<div class="page-title">
+    <h3>Homes</h3>
+</div>
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button class="btn btn-secondary me-md-2" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+            type="button" @onclick="(() => AddHome())">
+        Add Home
+    </button>
+</div>
+
+<div class="container-fluid p-4 position-relative">
+    @if (homes == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Home Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                </tr>
+            </thead>
+            @foreach (var home in homes)
+            {
+                <tbody>
+                    <tr @onclick="(() => ViewHome(home.HomeID))">
+                        <td>@home.Name</td>
+                        <td>@home.Email</td>
+                        <td>@home.Phone</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    }
+</div>
+
+@code {
+
+    List<Home> homes = new List<Home>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        homes = await HomeService.GetHomeAsync();
+        //employees = new List<Employees>(originalEmployees);
+    }
+
+    private void AddHome()
+    {
+        NavigationManager.NavigateTo("/Homes/Add/");
+    }
+
+    private void ViewHome(int id)
+    {
+        NavigationManager.NavigateTo("/Homes/View/" + id);
+    }
+}
+

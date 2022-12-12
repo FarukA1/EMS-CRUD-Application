@@ -1,0 +1,309 @@
+﻿@page "/Employees/View/{Id:int}"
+@page "/Employees/View/{Id:int}/Details"
+@using EmployeeManagementSystem.Data.Model;
+@using EmployeeManagementSystem.Data;
+@using EmployeeManagementSystem.Services;
+@inject EmployeeService EmployeeService
+@inject NavigationManager NavigationManager
+
+<div class="page-item">
+    @if (employee == null)
+    {<p>Loading...</p>}
+    else
+    {
+        <p><a class="link-secondary" href="/Employees">Employees</a> > <a class="link-primary" href="/Employees/View/@Id/Details">@employee.FirstName</a></p>
+    }
+</div>
+
+<div class="page-title">
+    @if (employee == null)
+    {
+        <h3>Loading...</h3>
+    }
+    else
+    {
+        <h3>@employee.FirstName</h3>
+    }
+</div>
+
+<div class="container-fluid p-4">
+    @if (@employee == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md" id="left-column">
+
+                <div class="card mb-4">
+                    <h5 class="card-header">Employee Details</h5>
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md">
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">First Name</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.FirstName @onchange='(eventArgs => { employee.FirstName = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Middle Name</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.MiddleName @onchange='(eventArgs => { employee.MiddleName = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Last Name</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.LastName @onchange='(eventArgs => { employee.LastName = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Age</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.Age @onchange='(eventArgs => { employee.Age = Int32.Parse(eventArgs.Value.ToString()); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Gender</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <select id="@employee.EmpID" value=@employee.Gender @onchange='(eventArgs => { employee.Gender = (Gender)Enum.Parse(typeof(Gender), eventArgs.Value.ToString()); UpdateValueAsync(); })' class="form-control hover-hide">
+                                            <option id="@employee.EmpID" value="@(Gender.Male)">Male</option>
+                                            <option id="@employee.EmpID" value="@(Gender.Female)">Female</option>
+                                            <option id="@employee.EmpID" value="@(Gender.Other)">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Phone</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.Phone @onchange='(eventArgs => { employee.Phone = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Email</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.Email @onchange='(eventArgs => { employee.Email = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md">
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">House Name</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.HouseName @onchange='(eventArgs => { employee.HouseName = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Address</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.Address @onchange='(eventArgs => { employee.Address = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Post Code</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.PostCode @onchange='(eventArgs => { employee.PostCode = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">County</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.County @onchange='(eventArgs => { employee.County = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">City</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.City @onchange='(eventArgs => { employee.City = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Nationality</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.Nationality @onchange='(eventArgs => { employee.Nationality = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md">
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Create Date</p>
+                                    </div>
+                                    <p>@employee.CreateDate.ToString("dd/MM/yyyy") </p>
+                                    @*<div class="col-8">
+                                            <input class="form-control hover-hide" value=@employee.CreateDate.ToString("MM/dd/yyyy") autocomplete="nope" />
+                                        </div>*@
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Hire Date</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control hover-hide" value=@employee.HireDate @onchange='(eventArgs => { employee.HireDate = Convert.ToDateTime(eventArgs.Value); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Termination Date</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control hover-hide" value=@employee.TerminationDate @onchange='(eventArgs => { employee.TerminationDate = Convert.ToDateTime(eventArgs.Value); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <p class="details-label">Employment Status</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control hover-hide" value=@employee.EmploymentStatus @onchange='(eventArgs => { employee.EmploymentStatus = eventArgs.Value.ToString(); UpdateValueAsync(); })' autocomplete="nope" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md text-right">
+                    <button class="btn btn-sm btn-danger" @onclick="@(eventArgs => { ShowModal(); })"><i class="far fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <Modal @ref="modalRef">
+            @*<ModalBackdrop />*@
+
+            <ModalContent IsCentered="true">
+                <ModalHeader>
+                    <ModalTitle>Delete</ModalTitle>
+                    <CloseButton Clicked="@HideModal" />
+                </ModalHeader>
+                <ModalBody>
+                    <FieldLabel> <strong> Are you sure you want to delete @employee.FirstName details ?</strong></FieldLabel>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Warning!</strong> This Employee cannot be recovered after delete.
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+                    <Button Color="Color.Danger" @onclick="() => DeleteContact(employee)">Delete</Button>
+                </ModalFooter>
+
+            </ModalContent>
+        </Modal>
+    }
+</div>
+<Snackbar @ref="snackbar">
+    <SnackbarBody>
+        @snackbarText
+    </SnackbarBody>
+</Snackbar>
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private Modal modalRef;
+
+    private void ShowModal()
+    {
+        // meetingPoint = meetingPoint;
+        modalRef.Show();
+    }
+
+    private void HideModal()
+    {
+        modalRef.Hide();
+    }
+
+    string snackbarText = "";
+    Snackbar snackbar;
+
+    public Employee employee = new Employee();
+
+    protected override async Task OnInitializedAsync()
+    {
+        employee = await EmployeeService.GetEmployeeDetailsAsync(Id);
+    }
+
+    private async Task DeleteContact(Employee employee)
+    {
+        employee = await EmployeeService.DeleteEmployee(Id);
+        //await MeetingPointsService.UpdateDatabaseAsync();
+        NavigationManager.NavigateTo("/Employees");
+    }
+
+    private async Task UpdateValueAsync()
+    {
+        await EmployeeService.UpdateDatabaseAsync();
+        snackbarText = $"{employee.FirstName}'s details have been updated. ";
+        snackbar.Show();
+    }
+}
+
